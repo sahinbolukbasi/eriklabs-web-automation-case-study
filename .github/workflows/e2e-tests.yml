@@ -17,7 +17,7 @@ env:
   E_BEBEK_PHONE: ${{ secrets.E_BEBEK_PHONE }}
   E_BEBEK_PASSWORD: ${{ secrets.E_BEBEK_PASSWORD }}
   HEADLESS: 'true'
-  WORKERS: '1'
+  WORKERS: '2'
 
 jobs:
   e2e-tests:
