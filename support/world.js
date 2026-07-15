@@ -30,9 +30,38 @@ class CustomWorld extends World {
     });
     this.page = await this.context.newPage();
     
-    // Cloudflare/Bot protection bypass script injection (hide webdriver)
+    // Advanced Bot Protection Evasion (Stealth Mode)
     await this.page.addInitScript(() => {
-      Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+      // 1. Remove webdriver property
+      Object.defineProperty(navigator, 'webdriver', { get: () => false });
+      
+      // 2. Mock languages
+      Object.defineProperty(navigator, 'languages', { get: () => ['tr-TR', 'tr', 'en-US', 'en'] });
+      
+      // 3. Mock plugins (bots usually have 0 plugins)
+      Object.defineProperty(navigator, 'plugins', { get: () => [1, 2, 3, 4, 5] });
+      
+      // 4. Mock window.chrome (essential for Chrome spoofing)
+      window.chrome = {
+        app: { isInstalled: false },
+        runtime: { PlatformOs: 'mac', PlatformArch: 'x86-64' }
+      };
+
+      // 5. Mock WebGL fingerprinting
+      const getParameter = WebGLRenderingContext.prototype.getParameter;
+      WebGLRenderingContext.prototype.getParameter = function(parameter) {
+        if (parameter === 37445) return 'Intel Inc.'; // UNMASKED_VENDOR_WEBGL
+        if (parameter === 37446) return 'Intel Iris OpenGL Engine'; // UNMASKED_RENDERER_WEBGL
+        return getParameter.call(this, parameter);
+      };
+      
+      // 6. Fix permissions API (Headless Chrome usually denies notifications)
+      const originalQuery = window.navigator.permissions.query;
+      window.navigator.permissions.query = (parameters) => (
+        parameters.name === 'notifications' ?
+          Promise.resolve({ state: Notification.permission }) :
+          originalQuery(parameters)
+      );
     });
     
     this.page.setDefaultTimeout(this.config.browser.timeout);

@@ -44,11 +44,25 @@ Then('sepette {int} ürün olduğu doğrulanır', async function (expectedCount)
 
 Then('sepet ara toplamının doğru olduğu kontrol edilir', async function () {
   const cartPage = this.getPage(CartPage);
-  const subtotal = await cartPage.getSubtotal();
-  expect(subtotal).toBeGreaterThan(0);
-  expect(typeof subtotal).toBe('number');
+  
+  const count = await cartPage.getCartItemCount();
+  let calculatedTotal = 0;
+
+  // Calculate the total by summing up (price * quantity) for all items in the cart
+  for (let i = 0; i < count; i++) {
+    const price = await cartPage.getItemPrice(i);
+    const qty = await cartPage.getItemQuantity(i);
+    calculatedTotal += (price * qty);
+  }
+
+  // Get the actual subtotal displayed on the site
+  const actualSubtotal = await cartPage.getSubtotal();
+
+  // Mathematical assertion with a small tolerance for JS floating point inaccuracies (e.g. 0.1 + 0.2 = 0.30000004)
+  expect(Math.abs(actualSubtotal - calculatedTotal)).toBeLessThan(0.01);
+  
   // Store for later comparison
-  this.testContext.lastSubtotal = subtotal;
+  this.testContext.lastSubtotal = actualSubtotal;
 });
 
 Then('sepet toplamının {string} TL üzerinde olduğu doğrulanır', async function (minAmount) {

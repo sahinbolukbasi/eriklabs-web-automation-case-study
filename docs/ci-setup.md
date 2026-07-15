@@ -22,9 +22,12 @@ Testlerin CI'da çalışması için aşağıdaki secret'ların GitHub'da tanıml
 
 | Tetikleyici | Koşul |
 |---|---|
-| `push` | `main` branch ve `feature/**` branch'lerine push |
+| `push` | Sadece `main` branch'ine push |
 | `pull_request` | `main` branch'ine açılan PR'lar |
 | `workflow_dispatch` | Manuel tetikleme (Actions → E2E Tests → Run workflow) |
+
+> **Canlı Rapor:** Test sonuçları (Allure Report) otomatik olarak şu adreste yayınlanır:
+> 👉 [https://sahinbolukbasi.github.io/eriklabs-web-automation-case-study/](https://sahinbolukbasi.github.io/eriklabs-web-automation-case-study/)
 
 ## Nasıl Çalışır
 
