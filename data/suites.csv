@@ -13,10 +13,10 @@
     Örnekler:
       | telefon     | şifre          |
       | 5348987073  | YanlışŞifre123 |
-      | 5000000001  | -Eriklabs1234  |","44574","Boş telefon alanıyla giriş denemesi","","2026-07-15","broken","2026-07-15","","","",""
-"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","44708","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","45959","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
-"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","42126","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da ürün arama ve sonuç doğrulama","44698","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da ürün arama ve sonuç doğrulama","44432","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
-"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","45688","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
+      | 5000000001  | -Eriklabs1234  |","44905","Boş telefon alanıyla giriş denemesi","","2026-07-15","broken","2026-07-15","","","",""
+"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","46444","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
+"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","44888","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
+"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","42874","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","44918","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","45023","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","46437","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
