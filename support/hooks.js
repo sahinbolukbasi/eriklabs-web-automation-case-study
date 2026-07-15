@@ -51,7 +51,9 @@ After(async function (scenario) {
       await this.attach(screenshot, 'image/png');
 
       // Save trace for debugging
-      tracePath = `traces/${scenario.pickle.name.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.zip`;
+      // Scenario Outline örnekleri paralel çalışırken aynı görünen ada sahip olabilir.
+      // Pickle id'si worker'lar arasında benzersiz olduğundan artefakt çakışmasını önler.
+      tracePath = `traces/${scenario.pickle.id}.zip`;
       await this.context.tracing.stop({ path: tracePath });
     } catch (err) {
       console.error('Failed to capture failure artifacts:', err.message);
