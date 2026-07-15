@@ -18,7 +18,9 @@ Before(async function (scenario) {
 });
 
 After(async function (scenario) {
-  // On failure: capture screenshot and attach to Allure
+  const videoPath = this.page ? await this.page.video()?.path() : null;
+
+  // On failure: capture screenshot, trace, and keep video
   if (scenario.result?.status === Status.FAILED) {
     try {
       const screenshot = await this.page.screenshot({ fullPage: true });
@@ -36,4 +38,18 @@ After(async function (scenario) {
   }
 
   await this.closeBrowser();
+
+  // retain-on-failure: delete video for passing scenarios
+  if (scenario.result?.status !== Status.FAILED && videoPath) {
+    const fs = require('fs');
+    try {
+      // Small delay to let Playwright finish writing the video file
+      await new Promise(resolve => setTimeout(resolve, 500));
+      if (fs.existsSync(videoPath)) {
+        fs.unlinkSync(videoPath);
+      }
+    } catch {
+      // Video cleanup is best-effort
+    }
+  }
 });

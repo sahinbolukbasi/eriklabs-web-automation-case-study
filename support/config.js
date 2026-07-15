@@ -1,4 +1,5 @@
-require('dotenv').config();
+// dotenv will NOT override existing env vars (e.g., CI-injected secrets)
+require('dotenv').config({ override: false });
 
 const config = {
   baseUrl: process.env.BASE_URL || 'https://www.e-bebek.com/',

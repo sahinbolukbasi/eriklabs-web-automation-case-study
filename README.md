@@ -100,9 +100,24 @@ SAP Commerce / Spartacus'un custom element yapısına uygun öncelik sırası:
 
 **Çözüm:** `waitFor({ state: 'visible', timeout: 15000 })` ile Angular hydration'ın tamamlanması bekleniyor. Statik `sleep` yerine Playwright'ın akıllı bekleme mekanizması tercih edildi. Cookie/izin banner'ları da `Before` hook'unda preemptive olarak kapatılıyor — bu, sonraki tıklamaların overlay tarafından engellenmesini önlüyor.
 
+## CI/CD — GitHub Actions
+
+Testler her push/PR'da otomatik olarak GitHub Actions'da headless çalışır. Detaylar: [docs/ci-setup.md](docs/ci-setup.md)
+
+```bash
+# Manuel tetikleme: Actions → E2E Tests → Run workflow
+# Gerekli GitHub Secrets: BASE_URL, E_BEBEK_PHONE, E_BEBEK_PASSWORD
+```
+
+Koşum sonrası **Allure raporu**, **video kayıtları** (sadece başarısız senaryolar) ve **screenshot'lar** Actions → ilgili run → Artifacts bölümünden indirilebilir.
+
 ## Proje Yapısı
 
 ```
+├── .github/workflows/  # GitHub Actions CI pipeline
+│   └── e2e-tests.yml
+├── docs/               # CI kurulum dokümantasyonu
+│   └── ci-setup.md
 ├── features/           # Gherkin (.feature) dosyaları
 ├── step_definitions/   # Step tanımları
 │   ├── generic.steps.js    # Tekrar kullanılabilir generic step'ler
@@ -121,7 +136,7 @@ SAP Commerce / Spartacus'un custom element yapısına uygun öncelik sırası:
 │   └── AccountNavPage.js
 ├── support/            # Framework desteği
 │   ├── world.js        # Cucumber World (Playwright lifecycle)
-│   ├── hooks.js        # Before/After hooks
+│   ├── hooks.js        # Before/After hooks + video retention
 │   ├── config.js       # Ortam konfigürasyonu
 │   └── priceParser.js  # TL fiyat parse helper
 ├── fixtures/           # Test verisi
@@ -130,3 +145,4 @@ SAP Commerce / Spartacus'un custom element yapısına uygun öncelik sırası:
 ├── .env.example        # Örnek env dosyası
 └── README.md
 ```
+
