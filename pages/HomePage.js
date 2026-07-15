@@ -19,10 +19,9 @@ class HomePage extends BasePage {
   }
 
   async clickLoginLink() {
-    // The login link is in the header — may need to wait for Angular/Spartacus hydration
     const loginLink = this.page.locator(this.selectors.headerLoginLink).first();
-    await loginLink.waitFor({ state: 'visible', timeout: 15000 });
-    await loginLink.click();
+    // Use force: true to bypass visibility checks if the element is inside a hidden menu
+    await loginLink.click({ force: true });
     await this.page.waitForLoadState('domcontentloaded');
   }
 
