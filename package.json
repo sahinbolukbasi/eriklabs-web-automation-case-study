@@ -1,0 +1,38 @@
+{
+  "name": "eriklabs-web-automation-case-study",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx cucumber-js",
+    "test:smoke": "npx cucumber-js --profile smoke",
+    "test:regression": "npx cucumber-js --profile regression",
+    "test:negative": "npx cucumber-js --profile negative",
+    "test:parallel": "npx cucumber-js --profile parallel",
+    "test:tag": "npx cucumber-js --tags",
+    "allure:generate": "npx allure generate allure-results --clean -o allure-report",
+    "allure:open": "npx allure open allure-report",
+    "allure:report": "npm run allure:generate && npm run allure:open"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sahinbolukbasi/eriklabs-web-automation-case-study.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sahinbolukbasi/eriklabs-web-automation-case-study/issues"
+  },
+  "homepage": "https://github.com/sahinbolukbasi/eriklabs-web-automation-case-study#readme",
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.1.0",
+    "@faker-js/faker": "^10.5.0",
+    "@playwright/test": "^1.61.1",
+    "allure-cucumberjs": "^3.10.2",
+    "allure-js-commons": "^3.10.2",
+    "dotenv": "^17.4.2",
+    "playwright": "^1.61.1"
+  }
+}
