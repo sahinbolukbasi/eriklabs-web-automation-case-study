@@ -19,15 +19,14 @@ class HomePage extends BasePage {
   }
 
   async clickLoginLink() {
-    try {
-      // Daha geniş ve kapsayıcı bir locator listesi
-      const loginLink = this.page.locator('a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn').first();
-      // UI üzerinden tıklamayı 5 saniye dener (responsive menü vb. sorunlar varsa zorlar)
-      await loginLink.click({ force: true, timeout: 5000 });
-    } catch (e) {
-      console.warn('UI Login butonu bulunamadı veya tıklanamadı. Direkt /login sayfasına gidiliyor (Fallback)...');
-      await this.navigate('login');
-    }
+    // Geniş ve kapsayıcı bir locator listesi (A/B testleri veya farklı ekran boyutları için)
+    const loginLink = this.page.locator('a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn').first();
+    
+    // UI hatalarını maskelememek (fail-fast) için fallback ve force:true kaldırıldı.
+    // Butonun ekranda gerçekten tıklanabilir (görünür) olmasını bekliyoruz.
+    await loginLink.waitFor({ state: 'visible', timeout: 15000 });
+    await loginLink.click();
+    
     await this.page.waitForLoadState('domcontentloaded');
   }
 
