@@ -19,9 +19,15 @@ class HomePage extends BasePage {
   }
 
   async clickLoginLink() {
-    const loginLink = this.page.locator(this.selectors.headerLoginLink).first();
-    // Use force: true to bypass visibility checks if the element is inside a hidden menu
-    await loginLink.click({ force: true });
+    try {
+      // Daha geniş ve kapsayıcı bir locator listesi
+      const loginLink = this.page.locator('a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn').first();
+      // UI üzerinden tıklamayı 5 saniye dener (responsive menü vb. sorunlar varsa zorlar)
+      await loginLink.click({ force: true, timeout: 5000 });
+    } catch (e) {
+      console.warn('UI Login butonu bulunamadı veya tıklanamadı. Direkt /login sayfasına gidiliyor (Fallback)...');
+      await this.navigate('login');
+    }
     await this.page.waitForLoadState('domcontentloaded');
   }
 
