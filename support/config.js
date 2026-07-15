@@ -15,7 +15,7 @@ const config = {
     timeout: parseInt(process.env.TIMEOUT || '30000', 10),
   },
   parallel: {
-    workers: Math.max(2, parseInt(process.env.WORKERS || '2', 10) || 2),
+    workers: parseInt(process.env.WORKERS || '1', 10),
   },
   session: {
     useStorageState: process.env.USE_STORAGE_STATE === 'true',
