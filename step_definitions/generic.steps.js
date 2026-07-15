@@ -142,6 +142,6 @@ When('{string} elementine hover yapılır', async function (elementKey) {
 
 // ─── URL Check ───
 
-Then('sayfa URL\\'inin {string} içerdiği kontrol edilir', async function (expectedPart) {
+Then("sayfa URL'inin {string} içerdiği kontrol edilir", async function (expectedPart) {
   await expect(this.page).toHaveURL(new RegExp(expectedPart), { timeout: 10000 });
 });
