@@ -1,0 +1,22 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","43352","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
+"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","23985","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","42742","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","42394","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
+"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","42724","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","24710","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
+"Geçersiz bilgilerle giriş denemelerinde uygun hata mesajlarının gösterilmesi
+
+  Senaryo Taslağı: Geçersiz bilgilerle giriş başarısız olur
+    Diyelim ki ""ana sayfa"" sayfasına gidilir
+    Ve header giriş linkine tıklanır
+    Ve ""<telefon>"" telefon numarası girilir
+    Ve devam butonuna tıklanır
+    Ve ""<şifre>"" şifresi girilir
+    Ve giriş butonuna tıklanır
+    O zaman hata mesajının görünür olduğu doğrulanır
+
+    Örnekler:
+      | telefon     | şifre          |
+      | 5348987073  | YanlışŞifre123 |
+      | 5000000001  | -Eriklabs1234  |","24793","Boş telefon alanıyla giriş denemesi","","2026-07-15","broken","2026-07-15","","","",""
