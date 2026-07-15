@@ -12,6 +12,10 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
   E_BEBEK_PHONE: ${{ secrets.E_BEBEK_PHONE }}
