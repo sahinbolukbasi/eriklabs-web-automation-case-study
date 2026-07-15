@@ -1,7 +1,5 @@
 const { setWorldConstructor, World } = require('@cucumber/cucumber');
-const { chromium } = require('playwright-extra');
-const stealth = require('puppeteer-extra-plugin-stealth')();
-chromium.use(stealth);
+const { chromium } = require('playwright');
 const config = require('./config');
 
 class CustomWorld extends World {
@@ -15,6 +13,7 @@ class CustomWorld extends World {
     this.browser = await chromium.launch({
       headless: this.config.browser.headless,
       slowMo: this.config.browser.slowMo,
+      args: ['--disable-blink-features=AutomationControlled'],
     });
     this.context = await this.browser.newContext({
       viewport: { width: 1440, height: 900 },

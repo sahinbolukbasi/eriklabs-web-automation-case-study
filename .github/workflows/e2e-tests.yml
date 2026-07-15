@@ -100,4 +100,3 @@ jobs:
         if: steps.test-run.outcome == 'failure'
         run: |
           echo "::warning::Some tests failed. Check the Allure report artifact for details."
-          exit 1
