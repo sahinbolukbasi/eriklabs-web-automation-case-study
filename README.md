@@ -94,55 +94,47 @@ SAP Commerce / Spartacus'un custom element yapısına uygun öncelik sırası:
 - `waitForLoadState('domcontentloaded')` ile sayfa geçişleri stabilize edilir
 - Cookie banner `Before` hook'unda otomatik kapatılır
 
-## Flaky Durum ve Çözümü
+## Flaky Durum ve Çözümü (Özel Wait Helper)
 
-**Sorun:** Spartacus/Angular SPA'da sayfa geçişleri asenkron olduğu için login sonrası kullanıcı adı elementi hemen render olmayabiliyor.
+**Sorun:** Spartacus/Angular SPA'da sayfa geçişleri asenkron olduğu için login sonrası kullanıcı adı elementi hemen render olmayabiliyor veya A/B testlerinden dolayı butonlar anlık kaybolabiliyor.
 
-**Çözüm:** `waitFor({ state: 'visible', timeout: 15000 })` ile Angular hydration'ın tamamlanması bekleniyor. Statik `sleep` yerine Playwright'ın akıllı bekleme mekanizması tercih edildi. Cookie/izin banner'ları da `Before` hook'unda preemptive olarak kapatılıyor — bu, sonraki tıklamaların overlay tarafından engellenmesini önlüyor.
+**Çözüm:** `waitFor({ state: 'visible', timeout: 15000 })` ile statik beklemelere ek olarak, karmaşık asenkron durumlar için `support/waitUtils.js` içerisine **Custom Retry (Poller)** helper'ı yazılmıştır. Bu yapı, elementi bulana kadar 1'er saniyelik aralıklarla işlemi tekrar dener (Örn: `retryUntilTrue`).
 
-## CI/CD — GitHub Actions
+## Bot Korumasını (WAF/Cloudflare) Aşma Stratejileri
+
+E-bebek agresif bot korumaları kullandığı için sisteme 3 seviyeli koruma atlatma mimarisi eklenmiştir:
+1. **JavaScript Stealth (world.js):** `navigator.webdriver = false`, WebGL spoofing, sahte plugin'ler ile tarayıcı gerçek bir ev kullanıcısı gibi gösterilir.
+2. **API+UI Hibrit Login (Bonus B1):** Ekranda CAPTCHA çıkması riskine karşı, `apiHelper.js` ile arkaplandan saniyeler içinde yetki (token) alınarak arayüze (localStorage) enjekte edilir.
+3. **Session Injection (state.json):** Yerel koşumlarda bot koruması aşılmazsa, `node scripts/generate-state.js` çalıştırılarak bir kez gerçek insan gibi login olunur ve üretilen çerezler tüm testlere dağıtılır.
+
+## CI/CD — GitHub Actions ve Docker
 
 Testler her push/PR'da otomatik olarak GitHub Actions'da headless çalışır. Detaylar: [docs/ci-setup.md](docs/ci-setup.md)
 
-```bash
-# Manuel tetikleme: Actions → E2E Tests → Run workflow
-# Gerekli GitHub Secrets: BASE_URL, E_BEBEK_PHONE, E_BEBEK_PASSWORD
-```
+**Canlı Rapor (GitHub Pages):** Test sonuçları anlık olarak yayınlanmaktadır: 👉 [Canlı Allure Raporu](https://sahinbolukbasi.github.io/eriklabs-web-automation-case-study/)
 
-Koşum sonrası **Allure raporu**, **video kayıtları** (sadece başarısız senaryolar) ve **screenshot'lar** Actions → ilgili run → Artifacts bölümünden indirilebilir.
+**Docker Desteği (Bonus B3):** Proje, Microsoft'un resmi Playwright imajına (`mcr.microsoft.com/playwright:v1.41.0-jammy`) sahip bir `Dockerfile` barındırır. Herhangi bir bilgisayarda ortam kurmadan direkt çalıştırılabilir.
 
 ## Proje Yapısı
 
 ```
 ├── .github/workflows/  # GitHub Actions CI pipeline
-│   └── e2e-tests.yml
 ├── docs/               # CI kurulum dokümantasyonu
-│   └── ci-setup.md
 ├── features/           # Gherkin (.feature) dosyaları
 ├── step_definitions/   # Step tanımları
-│   ├── generic.steps.js    # Tekrar kullanılabilir generic step'ler
-│   ├── login.steps.js
-│   ├── search.steps.js
-│   ├── cart.steps.js
-│   ├── session.steps.js
-│   └── logout.steps.js
 ├── pages/              # Page Object'ler
-│   ├── BasePage.js
-│   ├── HomePage.js
-│   ├── LoginPage.js
-│   ├── SearchResultsPage.js
-│   ├── ProductPage.js
-│   ├── CartPage.js
-│   └── AccountNavPage.js
+├── scripts/
+│   └── generate-state.js # Yerel bot atlatma için State Generator
 ├── support/            # Framework desteği
-│   ├── world.js        # Cucumber World (Playwright lifecycle)
-│   ├── hooks.js        # Before/After hooks + video retention
+│   ├── world.js        # Cucumber World (Playwright lifecycle + Stealth)
+│   ├── hooks.js        # Video/Trace yakalama
 │   ├── config.js       # Ortam konfigürasyonu
+│   ├── apiHelper.js    # API+UI Hybrid login servisi (Bonus B1)
+│   ├── waitUtils.js    # Flaky operasyonlar için poller (Bonus B4)
 │   └── priceParser.js  # TL fiyat parse helper
-├── fixtures/           # Test verisi
-│   └── testData.js     # Dinamik veri (faker)
+├── Dockerfile          # Container mimarisi (Bonus B3)
+├── .dockerignore       # Docker performans optimizasyonu
 ├── cucumber.js         # Cucumber profilleri
 ├── .env.example        # Örnek env dosyası
 └── README.md
 ```
-
