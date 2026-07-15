@@ -79,6 +79,14 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+      - name: Deploy Allure to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+
       - name: Check test result
         if: steps.test-run.outcome == 'failure'
         run: |
