@@ -7,6 +7,11 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
   E_BEBEK_PHONE: ${{ secrets.E_BEBEK_PHONE }}
