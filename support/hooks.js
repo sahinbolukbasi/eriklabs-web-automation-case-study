@@ -1,5 +1,8 @@
-const { Before, After, BeforeAll, AfterAll, Status } = require('@cucumber/cucumber');
+const { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } = require('@cucumber/cucumber');
 const { ContentType } = require('allure-js-commons');
+
+// Playwright browser launch and cookie dismissal can take more than 5 seconds
+setDefaultTimeout(60 * 1000);
 
 Before(async function (scenario) {
   await this.openBrowser();
