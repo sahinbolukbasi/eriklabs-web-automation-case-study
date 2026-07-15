@@ -48,7 +48,7 @@ class BasePage {
   async getText(selector) {
     const locator = this.page.locator(selector);
     await locator.waitFor({ state: 'visible' });
-    return (await locator.textContent()).trim();
+    return ((await locator.textContent()) || '').trim();
   }
 
   /**

@@ -1,10 +1,30 @@
-const { Before, After, BeforeAll, AfterAll, Status, setDefaultTimeout } = require('@cucumber/cucumber');
-const { ContentType } = require('allure-js-commons');
+const { Before, After, BeforeAll, Status, setDefaultTimeout } = require('@cucumber/cucumber');
+const fs = require('fs');
+const path = require('path');
+const config = require('./config');
 
 // Playwright browser launch and cookie dismissal can take more than 5 seconds
 setDefaultTimeout(60 * 1000);
 
+BeforeAll(function () {
+  // Allure environment bilgisi credential içermeden her koşumda rapora eklenir.
+  const resultsDir = path.join(__dirname, '..', 'allure-results');
+  fs.mkdirSync(resultsDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(resultsDir, 'environment.properties'),
+    `Base URL=${config.baseUrl}\nBrowser=Chromium\nHeadless=${config.browser.headless}\nWorkers=${config.parallel.workers}\n`,
+  );
+});
+
 Before(async function (scenario) {
+  this.scenarioTags = scenario.pickle.tags.map(({ name }) => name);
+
+  if (scenario.pickle.tags.some(({ name }) => name === '@requires-auth')) {
+    if (!this.config.credentials.phone || !this.config.credentials.password) {
+      throw new Error('Bu senaryo için E_BEBEK_PHONE ve E_BEBEK_PASSWORD environment değişkenleri gereklidir.');
+    }
+  }
+
   await this.openBrowser();
 
   // Start tracing for debugging on failure
@@ -43,8 +63,6 @@ After(async function (scenario) {
   // Close browser to ensure video and trace files are fully flushed to disk
   await this.closeBrowser();
 
-  const fs = require('fs');
-
   if (scenario.result?.status === Status.FAILED) {
     // Attach Trace to Allure
     if (tracePath && fs.existsSync(tracePath)) {
@@ -59,8 +77,6 @@ After(async function (scenario) {
     // Attach Video to Allure
     if (videoPath && fs.existsSync(videoPath)) {
       try {
-        // Small delay to ensure Playwright has released the file lock
-        await new Promise(resolve => setTimeout(resolve, 500));
         const videoData = fs.readFileSync(videoPath);
         await this.attach(videoData, 'video/webm');
       } catch (err) {
@@ -70,7 +86,6 @@ After(async function (scenario) {
   } else if (videoPath) {
     // retain-on-failure: delete video for passing scenarios
     try {
-      await new Promise(resolve => setTimeout(resolve, 500));
       if (fs.existsSync(videoPath)) {
         fs.unlinkSync(videoPath);
       }

@@ -4,13 +4,15 @@ const CartPage = require('../pages/CartPage');
 const ProductPage = require('../pages/ProductPage');
 const HomePage = require('../pages/HomePage');
 const SearchResultsPage = require('../pages/SearchResultsPage');
+const testData = require('../fixtures/testData');
 
 When('{string} ürünü aranıp sepete eklenir', async function (searchTerm) {
   const homePage = this.getPage(HomePage);
   const searchPage = this.getPage(SearchResultsPage);
   const productPage = this.getPage(ProductPage);
 
-  await homePage.searchFor(searchTerm);
+  const resolvedTerm = testData.resolveSearchTerm(searchTerm);
+  await homePage.searchFor(resolvedTerm);
   await searchPage.waitForResults();
   await searchPage.clickFirstProduct();
   await productPage.addToCart();
@@ -18,7 +20,7 @@ When('{string} ürünü aranıp sepete eklenir', async function (searchTerm) {
   // Store added product info in context
   if (!this.testContext.cartProducts) this.testContext.cartProducts = [];
   const name = await productPage.getProductName();
-  this.testContext.cartProducts.push({ name, searchTerm });
+  this.testContext.cartProducts.push({ name, searchTerm: resolvedTerm });
 });
 
 When('sepet sayfasına gidilir', async function () {

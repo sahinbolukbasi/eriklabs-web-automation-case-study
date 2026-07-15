@@ -1,6 +1,6 @@
 const { chromium } = require('playwright');
 const path = require('path');
-const fs = require('fs');
+const config = require('../support/config');
 
 (async () => {
   console.log('🌐 Tarayıcı açılıyor...');
@@ -19,7 +19,7 @@ const fs = require('fs');
   });
 
   const page = await context.newPage();
-  await page.goto('https://www.e-bebek.com/login');
+  await page.goto(new URL('login', config.baseUrl).href);
 
   // Kullanıcının işlemi bitirmesini bekle
   process.stdin.setRawMode(true);

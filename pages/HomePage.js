@@ -19,15 +19,22 @@ class HomePage extends BasePage {
   }
 
   async clickLoginLink() {
-    // Geniş ve kapsayıcı bir locator listesi (A/B testleri veya farklı ekran boyutları için)
-    const loginLink = this.page.locator('a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn').first();
-    
-    // UI hatalarını maskelememek (fail-fast) için fallback ve force:true kaldırıldı.
-    // Butonun ekranda gerçekten tıklanabilir (görünür) olmasını bekliyoruz.
-    await loginLink.waitFor({ state: 'visible', timeout: 15000 });
-    await loginLink.click();
-    
-    await this.page.waitForLoadState('domcontentloaded');
+    const candidates = this.page.locator(
+      'a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn',
+    );
+
+    // Birden çok responsive/A-B varyantı içinden görünür olanı seç; ilk gizli
+    // eşleşmenin testi bloke etmesine veya URL fallback'inin UI hatasını gizlemesine izin verme.
+    for (let index = 0; index < await candidates.count(); index += 1) {
+      const candidate = candidates.nth(index);
+      if (await candidate.isVisible()) {
+        await candidate.click();
+        await this.page.waitForLoadState('domcontentloaded');
+        return;
+      }
+    }
+
+    throw new Error('Görünür bir header giriş bağlantısı bulunamadı.');
   }
 
   async searchFor(term) {

@@ -8,9 +8,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
-  pages: write
-  id-token: write
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -44,10 +42,8 @@ jobs:
       - name: Install Playwright browsers
         run: npx playwright install --with-deps chromium
 
-      - name: Run tests (parallel, 2 workers)
+      - name: Run tests (parallel workers)
         run: npx cucumber-js --profile parallel
-        continue-on-error: true
-        id: test-run
 
       - name: Generate Allure report
         if: always()
@@ -88,15 +84,24 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+  publish-allure-report:
+    name: Publish Allure report
+    needs: e2e-tests
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Download Allure report
+        uses: actions/download-artifact@v4
+        with:
+          name: allure-report
+          path: allure-report
+
       - name: Deploy Allure to GitHub Pages
-        if: always()
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
           publish_dir: allure-report
-
-      - name: Check test result
-        if: steps.test-run.outcome == 'failure'
-        run: |
-          echo "::warning::Some tests failed. Check the Allure report artifact for details."

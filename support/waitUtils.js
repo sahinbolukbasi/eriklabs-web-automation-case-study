@@ -4,29 +4,17 @@
  * layout shifts, or third-party iframe hydration).
  * 
  * @param {Function} action - Async function to execute. Must return truthy if successful, falsy if failed.
- * @param {number} maxRetries - Maximum number of retries.
- * @param {number} delayMs - Delay between retries in milliseconds.
+ * @param {number} timeout - Maximum polling time in milliseconds.
  * @returns {Promise<boolean>} - True if the action succeeded within the retry limit.
  */
-async function retryUntilTrue(action, maxRetries = 5, delayMs = 1000) {
-  let lastError = null;
-  
-  for (let i = 0; i < maxRetries; i++) {
-    try {
-      const result = await action();
-      if (result) return true;
-    } catch (e) {
-      lastError = e;
-    }
-    // Controlled sleep only between retry intervals
-    await new Promise(resolve => setTimeout(resolve, delayMs));
-  }
-  
-  if (lastError) {
-    throw new Error(`İşlem ${maxRetries} denemede başarısız oldu. Son hata: ${lastError.message}`);
-  } else {
-    throw new Error(`İşlem ${maxRetries} denemede koşulu sağlayamadı (false döndü).`);
-  }
+async function retryUntilTrue(action, timeout = 15000) {
+  await expect.poll(action, {
+    timeout,
+    intervals: [100, 250, 500, 1000],
+    message: 'Koşul verilen süre içinde sağlanmadı.',
+  }).toBeTruthy();
+  return true;
 }
 
 module.exports = { retryUntilTrue };
+const { expect } = require('@playwright/test');

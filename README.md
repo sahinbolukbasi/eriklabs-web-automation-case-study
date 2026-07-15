@@ -76,7 +76,9 @@ Her senaryo kendi browser context'inde çalışır:
 - `Before` hook'unda yeni `BrowserContext` açılır
 - `After` hook'unda context kapatılır
 - Senaryolar arası cookie, localStorage, oturum paylaşımı yoktur
-- Paralel koşumda (2+ worker) senaryolar birbirini etkilemez
+- `World.testContext` yalnızca aktif senaryonun ürün, arama ve sepet bilgisini taşır
+- Paralel koşumda (varsayılan 2 worker) senaryolar birbirini etkilemez
+- `state.json` yalnızca `USE_STORAGE_STATE=true` **ve** `@use-storage-state` tag'i birlikte verildiğinde yüklenir. Misafir, negatif-login ve oturum-devamlılığı senaryoları state ile başlamaz.
 
 ## Locator Stratejisi
 
@@ -98,14 +100,14 @@ SAP Commerce / Spartacus'un custom element yapısına uygun öncelik sırası:
 
 **Sorun:** Spartacus/Angular SPA'da sayfa geçişleri asenkron olduğu için login sonrası kullanıcı adı elementi hemen render olmayabiliyor veya A/B testlerinden dolayı butonlar anlık kaybolabiliyor.
 
-**Çözüm:** `waitFor({ state: 'visible', timeout: 15000 })` ile statik beklemelere ek olarak, karmaşık asenkron durumlar için `support/waitUtils.js` içerisine **Custom Retry (Poller)** helper'ı yazılmıştır. Bu yapı, elementi bulana kadar 1'er saniyelik aralıklarla işlemi tekrar dener (Örn: `retryUntilTrue`).
+**Çözüm:** `waitFor({ state: 'visible' })`, `expect(...).toHaveValue()` ve `expect(...).toHaveCount()` kullanılır. Karmaşık asenkron koşullar için `support/waitUtils.js` içindeki `retryUntilTrue`, Playwright `expect.poll` ile artan aralıklarda tekrar dener. Kodda `sleep` veya `waitForTimeout` kullanılmaz.
 
 ## Bot Korumasını (WAF/Cloudflare) Aşma Stratejileri
 
 E-bebek agresif bot korumaları kullandığı için sisteme 3 seviyeli koruma atlatma mimarisi eklenmiştir:
 1. **JavaScript Stealth (world.js):** `navigator.webdriver = false`, WebGL spoofing, sahte plugin'ler ile tarayıcı gerçek bir ev kullanıcısı gibi gösterilir.
 2. **API+UI Hibrit Login (Bonus B1):** Ekranda CAPTCHA çıkması riskine karşı, `apiHelper.js` ile arkaplandan saniyeler içinde yetki (token) alınarak arayüze (localStorage) enjekte edilir.
-3. **Session Injection (state.json):** Yerel koşumlarda bot koruması aşılmazsa, `node scripts/generate-state.js` çalıştırılarak bir kez gerçek insan gibi login olunur ve üretilen çerezler tüm testlere dağıtılır.
+3. **Session Injection (state.json):** Yerel koşumlarda `node scripts/generate-state.js` ile üretilen state, yalnızca açıkça `@use-storage-state` etiketlenmiş hızlandırılmış UI senaryolarına verilir. Dosya `.gitignore` içindedir ve normal test izolasyonunu etkilemez.
 
 ## CI/CD — GitHub Actions ve Docker
 
@@ -113,7 +115,24 @@ Testler her push/PR'da otomatik olarak GitHub Actions'da headless çalışır. D
 
 **Canlı Rapor (GitHub Pages):** Test sonuçları anlık olarak yayınlanmaktadır: 👉 [Canlı Allure Raporu](https://sahinbolukbasi.github.io/eriklabs-web-automation-case-study/)
 
-**Docker Desteği (Bonus B3):** Proje, Microsoft'un resmi Playwright imajına (`mcr.microsoft.com/playwright:v1.41.0-jammy`) sahip bir `Dockerfile` barındırır. Herhangi bir bilgisayarda ortam kurmadan direkt çalıştırılabilir.
+**Docker Desteği (Bonus B3):** Proje, kilitli Playwright bağımlılığıyla aynı sürümdeki Microsoft imajını (`mcr.microsoft.com/playwright:v1.61.1-jammy`) kullanır. Herhangi bir bilgisayarda ortam kurmadan direkt çalıştırılabilir.
+
+## Senaryo Kapsamı ve Veri Yaklaşımı
+
+- S1: `@smoke @login` — gerçek credential ile giriş ve kullanıcıya özgü header elementi.
+- S2: `@negative @login` — tek bir `Scenario Outline`; yanlış şifre, kayıtlı olmayan telefon numarası ve boş alan Examples tablosunda parametriktir. Hatalı telefon/şifre her koşumda fixture ile üretilir.
+- S3: `@smoke @search` — fixture tabanlı sonuçlu arama ile dinamik, sonuçsuz arama.
+- S4: `@regression @cart` — iki fixture ürünü, adet değişimi, silme ve TL fiyatlarının sayısal ara toplam kontrolü.
+- S5: `@regression @session` — misafir sepeti, aynı scenario `World` bağlamında girişten sonra doğrulanır.
+- S6: `@regression @logout` — logout sonrasında hesap sayfasına erişimin login ekranına yönlenmesi kontrol edilir.
+
+> e-bebek giriş ekranı telefon numarası kullandığı için negatif kullanıcı kimliği örneği telefon numarası olarak uygulanmıştır.
+
+## CI ve PR Hesap Verebilirliği
+
+GitHub Actions testleri iki worker ile çalıştırır, Allure raporu ve failure artefaktlarını her koşumda yükler. Test başarısızlığı workflow'u başarısız yapar; yalnızca `main` branch'inde rapor GitHub Pages'e yayımlanır.
+
+[PR şablonu](.github/pull_request_template.md), AI kullanımı, gözden geçirilen değişiklikler ve doğrulama adımlarının açıklanmasını zorunlu alanlar olarak içerir. Push/PR işlemi, geliştiricinin kendi GitHub yetkileriyle yapılmalıdır.
 
 ## Proje Yapısı
 

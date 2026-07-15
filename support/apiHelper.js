@@ -5,8 +5,9 @@ const { request } = require('@playwright/test');
  * Useful for Hybrid (API+UI) testing, bypassing UI bottlenecks like CAPTCHAs or slow rendering.
  */
 class ApiHelper {
-  constructor(baseURL) {
+  constructor(baseURL, clientAuthorization) {
     this.baseURL = baseURL;
+    this.clientAuthorization = clientAuthorization;
   }
 
   /**
@@ -20,7 +21,10 @@ class ApiHelper {
   async loginViaApi(phone, password) {
     // Note: E-bebek uses SAP Commerce (Spartacus). 
     // The typical OAuth endpoint is /authorizationserver/oauth/token
-    const tokenEndpoint = `${this.baseURL}authorizationserver/oauth/token`;
+    const tokenEndpoint = new URL('authorizationserver/oauth/token', this.baseURL).href;
+    if (!this.clientAuthorization) {
+      throw new Error('E_BEBEK_API_CLIENT_AUTH tanımlanmadan API login kullanılamaz.');
+    }
     
     // Create an isolated request context
     const apiContext = await request.newContext();
@@ -29,10 +33,9 @@ class ApiHelper {
       const response = await apiContext.post(tokenEndpoint, {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          // Usually Spartacus requires a basic auth client id/secret for the mobile app or SPA
-          'Authorization': 'Basic bW9iaWxlX2FuZHJvaWQ6c2VjcmV0', 
+          'Authorization': this.clientAuthorization,
         },
-        data: {
+        form: {
           client_id: 'mobile_android',
           grant_type: 'password',
           username: phone,
@@ -80,7 +83,7 @@ class ApiHelper {
       };
       localStorage.setItem('spartacus-local-data', JSON.stringify(state));
       // E-bebek specific generic token key might also be used
-      localStorage.setItem('access_token', '${accessToken}');
+      localStorage.setItem('access_token', ${JSON.stringify(accessToken)});
     `;
   }
 }
