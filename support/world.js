@@ -15,7 +15,10 @@ class CustomWorld extends World {
       slowMo: this.config.browser.slowMo,
       args: ['--disable-blink-features=AutomationControlled'],
     });
-    this.context = await this.browser.newContext({
+    const fs = require('fs');
+    const path = require('path');
+    const statePath = path.join(__dirname, '..', 'state.json');
+    const contextOptions = {
       viewport: { width: 1440, height: 900 },
       locale: 'tr-TR',
       userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',
@@ -27,7 +30,14 @@ class CustomWorld extends World {
         dir: 'videos/',
         size: { width: 1440, height: 900 },
       },
-    });
+    };
+
+    // Güvenilir oturum (Cookie/LocalStorage) varsa Playwright'a enjekte et
+    if (fs.existsSync(statePath)) {
+      contextOptions.storageState = statePath;
+    }
+
+    this.context = await this.browser.newContext(contextOptions);
     this.page = await this.context.newPage();
     
     // Advanced Bot Protection Evasion (Stealth Mode)
