@@ -5,7 +5,7 @@ const common = {
     'step_definitions/**/*.js',
   ],
   format: [
-    'progress-bar',
+    'summary',
     'allure-cucumberjs/reporter',
   ],
   formatOptions: {
