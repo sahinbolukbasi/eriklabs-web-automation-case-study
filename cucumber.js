@@ -1,3 +1,5 @@
+const config = require('./support/config');
+
 const common = {
   require: [
     'support/world.js',
@@ -37,6 +39,6 @@ module.exports = {
   parallel: {
     ...common,
     paths: ['features/**/*.feature'],
-    parallel: 2,
+    parallel: config.parallel.workers,
   },
 };

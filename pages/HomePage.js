@@ -19,16 +19,22 @@ class HomePage extends BasePage {
   }
 
   async clickLoginLink() {
-    try {
-      // Daha geniş ve kapsayıcı bir locator listesi
-      const loginLink = this.page.locator('a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn').first();
-      // UI üzerinden tıklamayı 5 saniye dener (responsive menü vb. sorunlar varsa zorlar)
-      await loginLink.click({ force: true, timeout: 5000 });
-    } catch (e) {
-      console.warn('UI Login butonu bulunamadı veya tıklanamadı. Direkt /login sayfasına gidiliyor (Fallback)...');
-      await this.navigate('login');
+    const candidates = this.page.locator(
+      'a[href*="/login"], #btnMyAccount, cx-page-layout eb-header-login a, .login-btn',
+    );
+
+    // Birden çok responsive/A-B varyantı içinden görünür olanı seç; ilk gizli
+    // eşleşmenin testi bloke etmesine veya URL fallback'inin UI hatasını gizlemesine izin verme.
+    for (let index = 0; index < await candidates.count(); index += 1) {
+      const candidate = candidates.nth(index);
+      if (await candidate.isVisible()) {
+        await candidate.click();
+        await this.page.waitForLoadState('domcontentloaded');
+        return;
+      }
     }
-    await this.page.waitForLoadState('domcontentloaded');
+
+    throw new Error('Görünür bir header giriş bağlantısı bulunamadı.');
   }
 
   async searchFor(term) {

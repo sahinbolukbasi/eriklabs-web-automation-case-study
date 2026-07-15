@@ -1,15 +1,15 @@
 # language: tr
 
-@smoke @login
+@smoke @login @requires-auth
 Özellik: Kullanıcı Girişi
   e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması
 
   Senaryo: Geçerli telefon ve şifre ile başarılı giriş
     Diyelim ki "ana sayfa" sayfasına gidilir
-    Ve header giriş linkine tıklanır
+    Ve "header giriş linki" elementine tıklanır
     Ve telefon numarası girilir
-    Ve devam butonuna tıklanır
-    Ve şifre alanının görünür olduğu doğrulanır
+    Ve "devam butonu" elementine tıklanır
+    Ve "şifre alanı" elementinin görünür olduğu kontrol edilir
     Ve şifre girilir
-    Ve giriş butonuna tıklanır
-    O zaman kullanıcı adının görünür olduğu doğrulanır
+    Ve "giriş butonu" elementine tıklanır
+    O zaman "kullanıcı adı" elementinin görünür olduğu kontrol edilir

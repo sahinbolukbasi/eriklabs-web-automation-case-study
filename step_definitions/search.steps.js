@@ -2,11 +2,13 @@ const { When, Then } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 const HomePage = require('../pages/HomePage');
 const SearchResultsPage = require('../pages/SearchResultsPage');
+const testData = require('../fixtures/testData');
 
 When('{string} terimi aranır', async function (searchTerm) {
   const homePage = this.getPage(HomePage);
-  await homePage.searchFor(searchTerm);
-  this.testContext.lastSearchTerm = searchTerm;
+  const resolvedTerm = testData.resolveSearchTerm(searchTerm);
+  await homePage.searchFor(resolvedTerm);
+  this.testContext.lastSearchTerm = resolvedTerm;
 });
 
 Then('arama sonuçlarının görüntülendiği doğrulanır', async function () {

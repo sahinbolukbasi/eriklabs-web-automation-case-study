@@ -11,9 +11,8 @@ class LoginPage extends BasePage {
       passwordInput: '#txtPassword',
       continueButton: 'eb-login-username form button[type="submit"], eb-login-username form button',
       loginSubmitButton: 'eb-login-password form button[type="submit"], eb-login-password form button',
-      errorMessage: '.error-message, .alert-danger, eb-login .error, .form-error, [class*="error"]',
-      userGreeting: 'eb-header-login .user-name, eb-header-login [class*="greeting"], eb-header-login span',
-      phoneError: 'eb-login-username .error-message, eb-login-username [class*="error"]',
+      authenticationError: 'eb-login-password .error-message, eb-login-password .alert-danger, eb-login-password [role="alert"], eb-login-password [class*="error"]',
+      phoneError: 'eb-login-username .error-message, eb-login-username .invalid-feedback, eb-login-username [role="alert"], eb-login-username [class*="error"]',
     };
   }
 
@@ -66,35 +65,20 @@ class LoginPage extends BasePage {
     await this.submitLoginForm();
   }
 
-  async getErrorMessage() {
-    try {
-      const errorLocator = this.page.locator(this.selectors.errorMessage).first();
-      await errorLocator.waitFor({ state: 'visible', timeout: 5000 });
-      return (await errorLocator.textContent()).trim();
-    } catch {
-      return '';
+  getErrorLocator(errorType) {
+    if (errorType === 'telefon hata mesajı') {
+      return this.page.locator(this.selectors.phoneError).first();
     }
-  }
-
-  async isErrorVisible() {
-    return this.isVisible(this.selectors.errorMessage, 5000);
-  }
-
-  async isPhoneErrorVisible() {
-    return this.isVisible(this.selectors.phoneError, 5000);
+    if (errorType === 'giriş hata mesajı') {
+      return this.page.locator(this.selectors.authenticationError).first();
+    }
+    throw new Error(`Bilinmeyen login hata türü: ${errorType}`);
   }
 
   async isPasswordFieldVisible() {
     return this.isVisible(this.selectors.passwordInput, 10000);
   }
 
-  async isUserGreetingVisible() {
-    return this.isVisible(this.selectors.userGreeting, 15000);
-  }
-
-  async getUserGreetingText() {
-    return this.getText(this.selectors.userGreeting);
-  }
 }
 
 module.exports = LoginPage;

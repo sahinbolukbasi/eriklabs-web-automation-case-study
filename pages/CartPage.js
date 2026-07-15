@@ -1,5 +1,6 @@
 const BasePage = require('./BasePage');
 const { parsePrice } = require('../support/priceParser');
+const { expect } = require('@playwright/test');
 
 class CartPage extends BasePage {
   constructor(page) {
@@ -63,23 +64,24 @@ class CartPage extends BasePage {
    */
   async increaseItemQuantity(index = 0) {
     const item = this.page.locator(this.selectors.cartItems).nth(index);
+    const quantityInput = item.locator(this.selectors.itemQuantityInput).first();
+    const previousQuantity = Number(await quantityInput.inputValue());
     const increaseBtn = item.locator(this.selectors.itemQuantityIncrease).first();
     await increaseBtn.waitFor({ state: 'visible' });
     await increaseBtn.click();
-    // Wait for cart recalculation
-    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await expect(quantityInput).toHaveValue(String(previousQuantity + 1));
   }
 
   /**
    * Remove the nth cart item (0-indexed)
    */
   async removeItem(index = 0) {
+    const previousCount = await this.getCartItemCount();
     const item = this.page.locator(this.selectors.cartItems).nth(index);
     const removeBtn = item.locator(this.selectors.removeButton).first();
     await removeBtn.waitFor({ state: 'visible' });
     await removeBtn.click();
-    // Wait for cart update
-    await this.page.waitForLoadState('networkidle').catch(() => {});
+    await expect(this.page.locator(this.selectors.cartItems)).toHaveCount(previousCount - 1);
   }
 
   /**

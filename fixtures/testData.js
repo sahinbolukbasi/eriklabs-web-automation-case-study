@@ -10,6 +10,11 @@ const testData = {
     'mama sandalyesi',
   ],
 
+  cartProducts: [
+    'biberon',
+    'emzik',
+  ],
+
   /**
    * Generate a nonsense search term guaranteed to return no results
    */
@@ -31,6 +36,28 @@ const testData = {
     return faker.internet.password({ length: 12 });
   },
 
+  resolvePhone(value, credentials) {
+    if (value === 'ENV_PHONE') return credentials.phone;
+    if (value === 'UNREGISTERED_PHONE') return this.generateInvalidPhone();
+    if (value === 'EMPTY') return '';
+    return value;
+  },
+
+  resolvePassword(value, credentials) {
+    if (value === 'ENV_PASSWORD') return credentials.password;
+    if (value === 'INVALID_PASSWORD') return this.generateWrongPassword();
+    if (value === 'EMPTY') return '';
+    return value;
+  },
+
+  resolveSearchTerm(value) {
+    if (value === 'SEARCH_PRODUCT') return this.validSearchTerms[0];
+    if (value === 'NO_RESULT_TERM') return this.generateNoResultsTerm();
+    if (value === 'CART_PRODUCT_ONE') return this.cartProducts[0];
+    if (value === 'CART_PRODUCT_TWO') return this.cartProducts[1];
+    return value;
+  },
+
   /**
    * Negative login test scenarios
    */
@@ -47,13 +74,6 @@ const testData = {
     },
   },
 
-  /**
-   * Products to use in cart tests (search terms to find them)
-   */
-  cartProducts: [
-    'biberon',
-    'emzik',
-  ],
 };
 
 module.exports = testData;

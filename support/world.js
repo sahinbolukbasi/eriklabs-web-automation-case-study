@@ -7,6 +7,7 @@ class CustomWorld extends World {
     super(options);
     this.config = config;
     this.testContext = {}; // Shared state within a scenario (e.g., cart items)
+    this.scenarioTags = [];
   }
 
   async openBrowser() {
@@ -17,7 +18,7 @@ class CustomWorld extends World {
     });
     const fs = require('fs');
     const path = require('path');
-    const statePath = path.join(__dirname, '..', 'state.json');
+    const statePath = path.resolve(__dirname, '..', this.config.session.storageStatePath);
     const contextOptions = {
       viewport: { width: 1440, height: 900 },
       locale: 'tr-TR',
@@ -32,8 +33,9 @@ class CustomWorld extends World {
       },
     };
 
-    // Güvenilir oturum (Cookie/LocalStorage) varsa Playwright'a enjekte et
-    if (fs.existsSync(statePath)) {
+    // State yalnızca bunu açıkça isteyen senaryolarda kullanılır. Böylece misafir,
+    // negatif login ve paralel senaryolar önceden oturumlu başlamaz.
+    if (this.config.session.useStorageState && this.scenarioTags.includes('@use-storage-state') && fs.existsSync(statePath)) {
       contextOptions.storageState = statePath;
     }
 

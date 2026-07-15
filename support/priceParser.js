@@ -10,10 +10,15 @@ function parsePrice(priceStr) {
     throw new Error(`Invalid price string: "${priceStr}"`);
   }
 
-  const cleaned = priceStr
-    .replace(/[₺TL\s]/g, '') // Remove currency symbols and whitespace
-    .replace(/\./g, '')       // Remove thousand separators (dots)
-    .replace(',', '.');       // Convert decimal comma to dot
+  // "Ara Toplam: ₺1.234,56" gibi etiket içeren metinlerden de sayısal kısmı al.
+  const match = priceStr.replace(/\u00a0/g, ' ').match(/-?\d{1,3}(?:\.\d{3})*(?:,\d+)?|-?\d+(?:,\d+)?/);
+  if (!match) {
+    throw new Error(`Could not parse price from: "${priceStr}"`);
+  }
+
+  const cleaned = match[0]
+    .replace(/\./g, '')
+    .replace(',', '.');
 
   const value = parseFloat(cleaned);
 

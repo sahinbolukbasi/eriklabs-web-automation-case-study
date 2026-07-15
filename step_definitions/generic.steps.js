@@ -95,9 +95,8 @@ Then('{string} metninin görünür olduğu kontrol edilir', async function (text
 
 Then('{string} elementinin görünür olduğu kontrol edilir', async function (elementKey) {
   const elementMap = {
-    'kullanıcı adı': () => this.getPage(LoginPage).selectors.userGreeting,
+    'kullanıcı adı': () => this.getPage(AccountNavPage).selectors.userGreeting,
     'şifre alanı': () => this.getPage(LoginPage).selectors.passwordInput,
-    'hata mesajı': () => this.getPage(LoginPage).selectors.errorMessage,
     'arama sonuçları': () => this.getPage(SearchResultsPage).selectors.resultsContainer,
     'boş sepet mesajı': () => this.getPage(CartPage).selectors.emptyCartMessage,
   };

@@ -6,11 +6,11 @@
 
   Senaryo: Sonuç dönen arama
     Diyelim ki "ana sayfa" sayfasına gidilir
-    Ve "Doğal Tepkili Cam Biberon 120ml 0-3 Ay" terimi aranır
+    Ve "SEARCH_PRODUCT" terimi aranır
     O zaman arama sonuçlarının görüntülendiği doğrulanır
     Ve arama sonuçlarının arama terimiyle ilişkili olduğu doğrulanır
 
   Senaryo: Sonuç dönmeyen arama
     Diyelim ki "ana sayfa" sayfasına gidilir
-    Ve "xyzqwerty123456nonsense" terimi aranır
+    Ve "NO_RESULT_TERM" terimi aranır
     O zaman sonuç bulunamadı mesajının görüntülendiği doğrulanır

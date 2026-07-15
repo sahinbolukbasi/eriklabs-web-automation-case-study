@@ -6,9 +6,9 @@
 
   Senaryo: Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula
     Diyelim ki "ana sayfa" sayfasına gidilir
-    Ve "biberon" ürünü aranıp sepete eklenir
+    Ve "CART_PRODUCT_ONE" ürünü aranıp sepete eklenir
     Ve "ana sayfa" sayfasına gidilir
-    Ve "emzik" ürünü aranıp sepete eklenir
+    Ve "CART_PRODUCT_TWO" ürünü aranıp sepete eklenir
     Ve sepet sayfasına gidilir
     Ve sepette 2 ürün olduğu doğrulanır
     Ve sepetteki 1. ürünün adedi artırılır
