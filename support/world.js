@@ -17,6 +17,10 @@ class CustomWorld extends World {
     this.context = await this.browser.newContext({
       viewport: { width: 1440, height: 900 },
       locale: 'tr-TR',
+      recordVideo: {
+        dir: 'videos/',
+        size: { width: 1440, height: 900 },
+      },
     });
     this.page = await this.context.newPage();
     this.page.setDefaultTimeout(this.config.browser.timeout);
