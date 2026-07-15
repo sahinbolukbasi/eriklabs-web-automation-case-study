@@ -1,4 +1,10 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","43836","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
+"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","44437","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","43888","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
+"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","42056","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","43402","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","44348","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
 "Geçersiz bilgilerle giriş denemelerinde uygun hata mesajlarının gösterilmesi
 
   Senaryo Taslağı: Geçersiz bilgilerle giriş başarısız olur
@@ -13,10 +19,4 @@
     Örnekler:
       | telefon     | şifre          |
       | 5348987073  | YanlışŞifre123 |
-      | 5000000001  | -Eriklabs1234  |","44905","Boş telefon alanıyla giriş denemesi","","2026-07-15","broken","2026-07-15","","","",""
-"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","46444","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
-"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","44888","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
-"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","42874","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da ürün arama ve sonuç doğrulama","44918","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da ürün arama ve sonuç doğrulama","45023","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","46437","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
+      | 5000000001  | -Eriklabs1234  |","43513","Boş telefon alanıyla giriş denemesi","","2026-07-15","broken","2026-07-15","","","",""
