@@ -4,6 +4,7 @@
 Özellik: Çıkış Yapma
   Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması
 
+  @exclusive
   Senaryo: Başarılı çıkış ve oturum sonlanma doğrulaması
     Diyelim ki "ana sayfa" sayfasına gidilir
     Ve "header giriş linki" elementine tıklanır

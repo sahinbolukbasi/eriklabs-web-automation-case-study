@@ -25,6 +25,12 @@ Before(async function (scenario) {
     }
   }
 
+  // Mutex: Eğer senaryo @exclusive tag'ine sahipse kilidi almayı dene
+  if (scenario.pickle.tags.some(({ name }) => name === '@exclusive')) {
+    const { acquireLock } = require('./mutex');
+    await acquireLock();
+  }
+
   await this.openBrowser();
 
   // Start tracing for debugging on failure
@@ -98,5 +104,11 @@ After(async function (scenario) {
     } catch {
       // Video cleanup is best-effort
     }
+  }
+
+  // Mutex: Kilit alındıysa (veya alınmaya çalışıldıysa) serbest bırak
+  if (scenario.pickle.tags.some(({ name }) => name === '@exclusive')) {
+    const { releaseLock } = require('./mutex');
+    releaseLock();
   }
 });

@@ -4,6 +4,7 @@
 Özellik: Kullanıcı Girişi
   e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması
 
+  @exclusive
   Senaryo: Geçerli telefon ve şifre ile başarılı giriş
     Diyelim ki "ana sayfa" sayfasına gidilir
     Ve "header giriş linki" elementine tıklanır

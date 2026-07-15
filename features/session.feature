@@ -4,6 +4,7 @@
 Özellik: Oturum Devamlılığı
   Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması
 
+  @exclusive
   Senaryo: Misafir sepeti giriş sonrası korunur
     Diyelim ki misafir olarak bir ürün sepete eklenir
     Ve "header giriş linki" elementine tıklanır
