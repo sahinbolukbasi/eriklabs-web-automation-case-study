@@ -41,7 +41,9 @@ Before(async function (scenario) {
 });
 
 After(async function (scenario) {
-  const videoPath = this.page ? await this.page.video()?.path() : null;
+  // Video dosyası context kapanmadan tamamlanmaz. path() çağrısını burada await
+  // etmek başarısız paralel worker'ı hook timeout'ına kadar bekletebilir.
+  const video = this.page?.video();
   let tracePath = null;
 
   // On failure: capture screenshot and stop trace BEFORE closing browser
@@ -64,6 +66,8 @@ After(async function (scenario) {
 
   // Close browser to ensure video and trace files are fully flushed to disk
   await this.closeBrowser();
+
+  const videoPath = video ? await video.path().catch(() => null) : null;
 
   if (scenario.result?.status === Status.FAILED) {
     // Attach Trace to Allure

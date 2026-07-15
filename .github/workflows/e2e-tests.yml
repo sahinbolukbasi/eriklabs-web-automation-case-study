@@ -3,8 +3,6 @@ name: E2E Tests
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -103,6 +101,7 @@ jobs:
   publish-allure-report:
     name: Publish Allure report
     needs: e2e-tests
+    # Testler fail olsa BİLE raporun basılması gerekir. Sadece success şartı koşarsak hataları göremeyiz.
     if: always() && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
