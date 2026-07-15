@@ -77,7 +77,7 @@ Her senaryo kendi browser context'inde çalışır:
 - `After` hook'unda context kapatılır
 - Senaryolar arası cookie, localStorage, oturum paylaşımı yoktur
 - `World.testContext` yalnızca aktif senaryonun ürün, arama ve sepet bilgisini taşır
-- Paralel koşumda (varsayılan 2 worker) senaryolar birbirini etkilemez
+- **Dinamik Ölçeklenebilir Paralel Koşum:** Sistem varsayılan 2 worker ile çalışır, ancak ortam değişkenleriyle worker sayısı istenildiği kadar artırılıp azaltılabilir. Worker sayısı artsa bile, **File-based Mutex (Kilit)** mimarisi sayesinde E-bebek sunucusunun "eşzamanlı hesap girişi" engeli aşılır. Aynı hesabı kullanan riskli senaryolar (`@exclusive` tag'li) birbirlerini uyum içinde (sekronize) beklerken, diğer worker'lar arama/sepet gibi risksiz testleri tam hızda paralel koşturmaya devam eder. Adımlar birbiriyle asla veri sızdırmadan mükemmel uyum içerisinde çalışır.
 - `state.json` yalnızca `USE_STORAGE_STATE=true` **ve** `@use-storage-state` tag'i birlikte verildiğinde yüklenir. Misafir, negatif-login ve oturum-devamlılığı senaryoları state ile başlamaz.
 
 ## Locator Stratejisi
