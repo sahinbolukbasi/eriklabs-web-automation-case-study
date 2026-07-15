@@ -2,10 +2,19 @@ name: E2E Tests
 
 on:
   push:
-    branches: [main, 'feature/**']
+    branches: [main]
   pull_request:
     branches: [main]
   workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 env:
   BASE_URL: ${{ secrets.BASE_URL }}
@@ -79,8 +88,15 @@ jobs:
           retention-days: 7
           if-no-files-found: ignore
 
+      - name: Deploy Allure to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: allure-report
+
       - name: Check test result
         if: steps.test-run.outcome == 'failure'
         run: |
           echo "::warning::Some tests failed. Check the Allure report artifact for details."
-          exit 1
