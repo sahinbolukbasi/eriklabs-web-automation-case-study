@@ -22,31 +22,54 @@ Before(async function (scenario) {
 
 After(async function (scenario) {
   const videoPath = this.page ? await this.page.video()?.path() : null;
+  let tracePath = null;
 
-  // On failure: capture screenshot, trace, and keep video
+  // On failure: capture screenshot and stop trace BEFORE closing browser
   if (scenario.result?.status === Status.FAILED) {
     try {
       const screenshot = await this.page.screenshot({ fullPage: true });
       await this.attach(screenshot, 'image/png');
 
       // Save trace for debugging
-      const tracePath = `traces/${scenario.pickle.name.replace(/\s+/g, '_')}_${Date.now()}.zip`;
+      tracePath = `traces/${scenario.pickle.name.replace(/[^a-zA-Z0-9]/g, '_')}_${Date.now()}.zip`;
       await this.context.tracing.stop({ path: tracePath });
     } catch (err) {
-      // Screenshot/trace might fail if browser already crashed
       console.error('Failed to capture failure artifacts:', err.message);
     }
   } else {
     await this.context.tracing.stop().catch(() => {});
   }
 
+  // Close browser to ensure video and trace files are fully flushed to disk
   await this.closeBrowser();
 
-  // retain-on-failure: delete video for passing scenarios
-  if (scenario.result?.status !== Status.FAILED && videoPath) {
-    const fs = require('fs');
+  const fs = require('fs');
+
+  if (scenario.result?.status === Status.FAILED) {
+    // Attach Trace to Allure
+    if (tracePath && fs.existsSync(tracePath)) {
+      try {
+        const traceData = fs.readFileSync(tracePath);
+        await this.attach(traceData, 'application/zip');
+      } catch (err) {
+        console.error('Failed to attach trace to Allure:', err.message);
+      }
+    }
+
+    // Attach Video to Allure
+    if (videoPath && fs.existsSync(videoPath)) {
+      try {
+        // Small delay to ensure Playwright has released the file lock
+        await new Promise(resolve => setTimeout(resolve, 500));
+        const videoData = fs.readFileSync(videoPath);
+        await this.attach(videoData, 'video/webm');
+      } catch (err) {
+        console.error('Failed to attach video to Allure:', err.message);
+      }
+    }
+  } else if (videoPath) {
+    // retain-on-failure: delete video for passing scenarios
     try {
-      // Small delay to let Playwright finish writing the video file
       await new Promise(resolve => setTimeout(resolve, 500));
       if (fs.existsSync(videoPath)) {
         fs.unlinkSync(videoPath);
