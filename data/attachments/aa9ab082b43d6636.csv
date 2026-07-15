@@ -1,0 +1,4 @@
+telefon,şifre,hata
+ENV_PHONE,INVALID_PASSWORD,giriş hata mesajı
+UNREGISTERED_PHONE,INVALID_PASSWORD,giriş hata mesajı
+EMPTY,EMPTY,telefon hata mesajı

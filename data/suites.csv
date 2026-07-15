@@ -1,22 +1,10 @@
 "DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
-"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","48492","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da ürün arama ve sonuç doğrulama","43442","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da ürün arama ve sonuç doğrulama","43264","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
-"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","43755","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
-"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","42748","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
-"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","48913","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
-"Geçersiz bilgilerle giriş denemelerinde uygun hata mesajlarının gösterilmesi
-
-  Senaryo Taslağı: Geçersiz bilgilerle giriş başarısız olur
-    Diyelim ki ""ana sayfa"" sayfasına gidilir
-    Ve header giriş linkine tıklanır
-    Ve ""<telefon>"" telefon numarası girilir
-    Ve devam butonuna tıklanır
-    Ve ""<şifre>"" şifresi girilir
-    Ve giriş butonuna tıklanır
-    O zaman hata mesajının görünür olduğu doğrulanır
-
-    Örnekler:
-      | telefon     | şifre          |
-      | 5348987073  | YanlışŞifre123 |
-      | 5000000001  | -Eriklabs1234  |","48612","Boş telefon alanıyla giriş denemesi","","2026-07-15","broken","2026-07-15","","","",""
+"Geçersiz bilgilerle giriş denemelerinde uygun hata mesajlarının gösterilmesi","5611","Geçersiz bilgilerle giriş başarısız olur","","2026-07-15","broken","2026-07-15","","","",""
+"Misafir olarak sepete eklenen ürünlerin giriş sonrası korunması","43719","Misafir sepeti giriş sonrası korunur","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","43164","Sonuç dönmeyen arama","","2026-07-15","broken","2026-07-15","","","",""
+"Giriş yapmış kullanıcının çıkış yapması ve oturumun sonlanması","5572","Başarılı çıkış ve oturum sonlanma doğrulaması","","2026-07-15","broken","2026-07-15","","","",""
+"Sepete ürün ekleme, adet değiştirme, silme ve toplam doğrulama","43650","Sepete iki ürün ekle, adedini değiştir, birini sil, toplamı doğrula","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da ürün arama ve sonuç doğrulama","42140","Sonuç dönen arama","","2026-07-15","broken","2026-07-15","","","",""
+"e-bebek.com'da geçerli telefon ve şifre ile giriş yapılması","7653","Geçerli telefon ve şifre ile başarılı giriş","","2026-07-15","broken","2026-07-15","","","",""
+"Geçersiz bilgilerle giriş denemelerinde uygun hata mesajlarının gösterilmesi","6968","Geçersiz bilgilerle giriş başarısız olur","","2026-07-15","broken","2026-07-15","","","",""
+"Geçersiz bilgilerle giriş denemelerinde uygun hata mesajlarının gösterilmesi","5569","Geçersiz bilgilerle giriş başarısız olur","","2026-07-15","broken","2026-07-15","","","",""
